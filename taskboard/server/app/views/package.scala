@@ -4,7 +4,7 @@ import scalatags.Text.all._
 
 package object views {
 
-  object Implicits {
+  object implicits {
     implicit def contentTypeOfTag(implicit codec: Codec): ContentTypeOf[Tag] = {
       ContentTypeOf[Tag](Some(ContentTypes.HTML))
     }
@@ -14,4 +14,15 @@ package object views {
     }
   }
 
+  object paths {
+
+    object scripts {
+      val main = "assets/client-fastopt.js"
+    }
+
+    object styles {
+
+    }
+
+  }
 }

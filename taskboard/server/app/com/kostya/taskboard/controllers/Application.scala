@@ -4,7 +4,7 @@ import com.kostya.taskboard.shared.SharedMessages
 import javax.inject._
 import play.api.mvc._
 import views.Home
-import views.Implicits._
+import views.implicits._
 
 @Singleton
 class Application @Inject()(cc: ControllerComponents) extends AbstractController(cc) {

@@ -18,7 +18,7 @@ object Home {
           em(id := "scalajsShoutOut"),
         )
       ),
-      script(src := "assets/client-fastopt.js")
+      script(src := paths.scripts.main)
     )
   )
 }
