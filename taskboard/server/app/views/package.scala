@@ -15,13 +15,15 @@ package object views {
   }
 
   object paths {
-
     object scripts {
       val main = "assets/client-fastopt.js"
     }
 
     object styles {
-
+      object bootstrap{
+        val grid = "assets/stylesheets/bootstrap/bootstrap-grid.css"
+        val gridMin = "assets/stylesheets/bootstrap/bootstrap-grid.min.css"
+      }
     }
 
   }
