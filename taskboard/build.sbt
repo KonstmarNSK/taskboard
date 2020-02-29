@@ -6,7 +6,8 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
   libraryDependencies ++= Seq(
     guice,
-    specs2 % Test
+    specs2 % Test,
+    "com.lihaoyi" %% "scalatags" % "0.8.6",
   ),
 ).enablePlugins(PlayScala).
   dependsOn(sharedJvm)
@@ -32,4 +33,4 @@ lazy val commonSettings = Seq(
 )
 
 // loads the server project at sbt startup
-onLoad in Global := (onLoad in Global).value andThen {s: State => "project server" :: s}
+onLoad in Global := (onLoad in Global).value andThen { s: State => "project server" :: s }
