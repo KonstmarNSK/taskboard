@@ -8,6 +8,9 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     guice,
     specs2 % Test,
     "com.lihaoyi" %% "scalatags" % "0.8.6",
+    "com.typesafe.play" %% "play-slick" % "4.0.0",
+    "com.h2database" % "h2" % "1.4.192",
+    "com.typesafe.play" %% "play-slick-evolutions" % "4.0.0"
   ),
 ).enablePlugins(PlayScala).
   dependsOn(sharedJvm)
