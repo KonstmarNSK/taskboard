@@ -22,16 +22,15 @@ class Application @Inject()(
                            ) extends AbstractController(cc)
   with HasDatabaseConfigProvider[JdbcProfile] {
 
-  def index = Action.async {
-    schema.init.map(_ =>
-      Ok(Home.homepage(SharedMessages.itWorks)))
+  def index = Action {
+      Ok(Home.homepage(SharedMessages.itWorks))
   }
 
   def createTicket(title: String, description: String) = Action.async {
-    schema.insert(Ticket(title, description)).map(_ => Ok("123"))
+    schema.insert(Ticket(title, description)).map(createdId => Ok(s"ID: $createdId"))
   }
 
-  //  def getTicket(id: Long) = Action.async{ implicit request =>
-  //
-  //  }
+  def getAllTickets = Action.async {
+    schema.getAll map (all => Ok(all.mkString("\n")))
+  }
 }

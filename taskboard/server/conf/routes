@@ -5,6 +5,7 @@
 # Home page
 GET        /                             com.kostya.taskboard.controllers.Application.index
 GET        /api-rest/create-ticket       com.kostya.taskboard.controllers.Application.createTicket(title: String, description: String)
+GET        /api-rest/get-tickets         com.kostya.taskboard.controllers.Application.getAllTickets
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)
