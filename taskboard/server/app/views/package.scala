@@ -21,6 +21,8 @@ package object views {
 
     object styles {
       object bootstrap{
+        val min = "assets/stylesheets/bootstrap/bootstrap.min.css"
+
         val grid = "assets/stylesheets/bootstrap/bootstrap-grid.css"
         val gridMin = "assets/stylesheets/bootstrap/bootstrap-grid.min.css"
       }

@@ -6,10 +6,7 @@ object Home {
   def homepage(message: String) = scalatags.Text.all.html(
     head(
       title := "Hello, Scala",
-      link(
-        rel := "stylesheet",
-        href := paths.styles.bootstrap.gridMin,
-      ),
+      styles(paths.styles.bootstrap.min),
     ),
     body(
       h2("Play and Scala.js share a same message"),
@@ -24,24 +21,82 @@ object Home {
         )
       ),
       script(src := paths.scripts.main),
-      tryingBootstrap
+      div(
+        `class` := "container",
+        createTicket.createTicketForm,
+      ),
     )
   )
 
-  private[this] val tryingBootstrap = div(
-    `class` := "container",
-    div(
+  private[this] object createTicket {
+
+    private[this] object ids {
+      val ticketNameInput = "ticket-name-input"
+      val ticketDescInput = "ticket-description-input"
+    }
+
+    private[Home] val createTicketForm = div(
       `class` := "row",
       div(
-        `class` := "col",
-        backgroundColor := "blue",
-        "123"
-      ),
-      div(
-        `class` := "col",
-        backgroundColor := "red",
-        "456"
-      ),
-    ),
+        `class` := "col-md-8",
+        h4("Create ticket"),
+        form(
+          div(
+            `class` := "row",
+            div(
+              `class` := "col-md-6",
+              label(
+                `for` := ids.ticketNameInput,
+                "Title: "
+              ),
+              input(
+                id := ids.ticketNameInput,
+                `class` := "form-control",
+                `type` := "text",
+                placeholder := "Some ticket name",
+              )
+            )
+          ),
+          div(
+            `class` := "row",
+            div(
+              `class` := "col",
+              label(
+                `for` := ids.ticketDescInput,
+                "Description: ",
+                required,
+              ),
+              textarea(
+                id := ids.ticketDescInput,
+                `class` := "form-control",
+                rows := "6",
+                placeholder := "Ticket description",
+                required,
+              )
+            )
+          ),
+          hr(
+            `class` := "mb-4"
+          ),
+          div(
+            `class` := "row",
+            div(
+              `class` := "col-md-4",
+              button(
+                `class` := "btn btn-primary btn-block",
+                `type` := "submit",
+                "Create ticket"
+              )
+            ),
+          ),
+        )
+      )
+    )
+  }
+
+  private[this] def styles(path: String) = link(
+    rel := "stylesheet",
+    href := path,
   )
+
 }
