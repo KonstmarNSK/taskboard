@@ -1,6 +1,5 @@
 package database
 
-import com.kostya.taskboard.shared.Model.Ticket
 import javax.inject.{Inject, Singleton}
 import com.kostya.taskboard.shared.Model.{Project, Ticket}
 import javax.inject.Inject
@@ -14,15 +13,6 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(i
 
   import profile.api._
 
-  class TicketsTable(tag: Tag) extends Table[Ticket](tag, "TICKETS") {
-    import O._
-
-    def id = column[Long]("ID", PrimaryKey, AutoInc)
-    def title = column[String]("TITLE")
-    def description = column[String]("DESCRIPTION")
-
-    def * = (title, description, id).mapTo[Ticket]
-  }
 
   class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECTS") {
     import O._
@@ -34,8 +24,24 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(i
     def * = (name, description, id).mapTo[Project]
   }
 
-  lazy val tickets = TableQuery[TicketsTable]
   lazy val projects = TableQuery[ProjectsTable]
+
+  class TicketsTable(tag: Tag) extends Table[Ticket](tag, "TICKETS") {
+    import O._
+
+    def id = column[Long]("ID", PrimaryKey, AutoInc)
+    def title = column[String]("TITLE")
+    def description = column[String]("DESCRIPTION")
+    def state = column[String]("STATE")
+    def priority = column[String]("PRIORITY")
+
+    def projectId= column[Long] ("PROJECT")
+    def projectIdFk = foreignKey("FK_PROJECT_ID", projectId, projects)(_.id)
+
+    def * = (title, description, priority, state, projectId, id).mapTo[Ticket]
+  }
+
+  lazy val tickets = TableQuery[TicketsTable]
 
   def createTicket(ticket: Ticket) = db.run(tickets returning tickets.map(_.id) += ticket)
   def getAllTickets: Future[Seq[Ticket]] = db.run(tickets.result)

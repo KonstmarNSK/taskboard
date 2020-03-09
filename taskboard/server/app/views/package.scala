@@ -41,10 +41,20 @@ package object views {
         mapping(
           createTicket.ticketTitle -> nonEmptyText,
           createTicket.ticketDescription -> nonEmptyText,
+          createTicket.priority -> text,
+          createTicket.projectId -> longNumber,
         )
-        // id isn't in form parameters
-        (Ticket.apply(_, _, 0L))
-        (Ticket.unapply(_).map({ case (title, desc, id) => (title, desc) }))
+        // id isn't in form parameters and new tickets are always opened
+        (Ticket.apply(_, _, _, ticketStates.opened, _, 0L))
+        (Ticket.unapply(_) map (
+          { case (  name,
+                    desc,
+                    priority,
+                    state,
+                    projectId,
+                    id ) => (name, desc, priority, projectId) }
+          )
+        )
       )
 
       val createProjectForm = Form(
@@ -54,7 +64,7 @@ package object views {
         )
         // id isn't in form parameters
         (Project.apply(_, _, 0L))
-        (Project.unapply(_).map({ case (name, desc, id) => (name, desc) }))
+        (Project.unapply(_) map ({ case (name, desc, id) => (name, desc) }))
       )
     }
 
@@ -102,8 +112,10 @@ package object views {
 
     object formParamNames{
       object createTicket{
-        val ticketTitle = "ticketTitle"
-        val ticketDescription = "ticketDescription"
+        val ticketTitle = "title"
+        val ticketDescription = "description"
+        val projectId = "projectId"
+        val priority = "priority"
       }
 
       object createProject{
@@ -111,5 +123,6 @@ package object views {
         val projectDescription = "projectDescription"
       }
     }
+
   }
 }

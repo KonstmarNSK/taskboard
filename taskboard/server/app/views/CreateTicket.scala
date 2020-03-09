@@ -10,9 +10,11 @@ private[views] object CreateTicket {
   private[this] object ids {
     val ticketNameInput = "ticket-name-input"
     val ticketDescInput = "ticket-description-input"
+    val projectIdInput = "project-id-input"
+    val priorityInput = "ticket-priority-input"
   }
 
-  def createTicketPage(implicit request : RequestHeader) = scalatags.Text.all.html(
+  def createTicketPage(implicit request: RequestHeader) = scalatags.Text.all.html(
     head(
       title := "Create new ticket",
       styles(paths.styles.bootstrap.min),
@@ -72,6 +74,60 @@ private[views] object CreateTicket {
               rows := "6",
               placeholder := "Ticket description",
               required,
+            )
+          )
+        ),
+
+        // priority
+        div(
+          `class` := "row",
+          div(
+            `class` := "col",
+            label(
+              `for` := ids.priorityInput,
+              "Priority: ",
+            ),
+            select(
+              id := ids.priorityInput,
+              name := formParamNames.createTicket.priority,
+              `class` := "form-control",
+              required,
+              option(
+                selected,
+                value := "LOW",
+                "Low"
+              ),
+              option(
+                value := "MEDIUM",
+                "Medium"
+              ),
+              option(
+                value := "HIGH",
+                "High"
+              ),
+            )
+          )
+        ),
+
+        // projectId
+        div(
+          `class` := "row",
+          div(
+            `class` := "col",
+            label(
+              `for` := ids.projectIdInput,
+              "Project: ",
+            ),
+            select(
+              id := ids.projectIdInput,
+              name := formParamNames.createTicket.projectId,
+              `class` := "form-control",
+              required,
+              option(
+                selected,
+                value := "1",
+                "Default"
+              ),
             )
           )
         ),
