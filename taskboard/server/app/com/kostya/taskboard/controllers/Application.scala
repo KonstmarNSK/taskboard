@@ -27,10 +27,10 @@ class Application @Inject()(
   }
 
   def createTicket(title: String, description: String) = Action.async {
-    schema.insert(Ticket(title, description)).map(createdId => Ok(s"ID: $createdId"))
+    schema.createTicket(Ticket(title, description)).map(createdId => Ok(s"ID: $createdId"))
   }
 
   def getAllTickets = Action.async {
-    schema.getAll map (all => Ok(all.mkString("\n")))
+    schema.getAllTickets map (all => Ok(all.mkString("\n")))
   }
 }
