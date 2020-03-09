@@ -8,7 +8,7 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.mvc._
 import slick.jdbc.JdbcProfile
 import views.Home
-import views.implicits._
+import views.implicits.scalatags._
 
 import scala.concurrent.ExecutionContext
 
@@ -23,11 +23,7 @@ class Application @Inject()(
   with HasDatabaseConfigProvider[JdbcProfile] {
 
   def index = Action {
-      Ok(Home.homepage(SharedMessages.itWorks))
-  }
-
-  def createTicket(title: String, description: String) = Action.async {
-    schema.insert(Ticket(title, description)).map(createdId => Ok(s"ID: $createdId"))
+      Ok(views.pages.homepageView(SharedMessages.itWorks))
   }
 
   def getAllTickets = Action.async {
