@@ -10,6 +10,12 @@ POST       /api-rest/create-ticket       com.kostya.taskboard.controllers.Create
 # get created tickets
 GET        /api-rest/get-tickets         com.kostya.taskboard.controllers.Application.getAllTickets
 
+# projects creation
+GET        /api-rest/create-project       com.kostya.taskboard.controllers.CreateProject.createProjectPage
+POST       /api-rest/create-project       com.kostya.taskboard.controllers.CreateProject.createProject
+# get created projects
+GET        /api-rest/get-projects         com.kostya.taskboard.controllers.Application.getAllProjects
+
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)
 GET        /versionedAssets/*file        controllers.Assets.versioned(path="/public", file: Asset)

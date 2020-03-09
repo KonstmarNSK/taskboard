@@ -27,6 +27,10 @@ class Application @Inject()(
   }
 
   def getAllTickets = Action.async {
-    schema.getAll map (all => Ok(all.mkString("\n")))
+    schema.getAllTickets map (all => Ok(all.mkString("\n")))
+  }
+
+  def getAllProjects = Action.async {
+    schema.getAllProjects map (all => Ok(all.mkString("\n")))
   }
 }

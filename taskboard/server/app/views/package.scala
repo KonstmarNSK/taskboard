@@ -21,14 +21,18 @@ package object views {
   // views
   object pages{
 
-    def createTicketView(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage
     def homepageView(s: String) : scalatags.Text.TypedTag[String] = Home.homepage(s)
+
+    def createTicketView(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage
     def getAllTicketsView = ???
+
+    def createProjectView(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateProject.createProjectPage
+    def getAllProjectsView = ???
 
   }
 
   object forms {
-      import com.kostya.taskboard.shared.Model.Ticket
+      import com.kostya.taskboard.shared.Model._
       import internal.formParamNames._
       import play.api.data.Forms._
       import play.api.data._
@@ -41,6 +45,16 @@ package object views {
         // id isn't in form parameters
         (Ticket.apply(_, _, 0L))
         (Ticket.unapply(_).map({ case (title, desc, id) => (title, desc) }))
+      )
+
+      val createProjectForm = Form(
+        mapping(
+          createProject.projectName -> nonEmptyText,
+          createProject.projectDescription -> nonEmptyText,
+        )
+        // id isn't in form parameters
+        (Project.apply(_, _, 0L))
+        (Project.unapply(_).map({ case (name, desc, id) => (name, desc) }))
       )
     }
 
@@ -66,6 +80,7 @@ package object views {
 
       object api{
         val createTicket = "/api-rest/create-ticket"
+        val createProject = "/api-rest/create-project"
       }
     }
 
@@ -89,6 +104,11 @@ package object views {
       object createTicket{
         val ticketTitle = "ticketTitle"
         val ticketDescription = "ticketDescription"
+      }
+
+      object createProject{
+        val projectName = "projectName"
+        val projectDescription = "projectDescription"
       }
     }
   }
