@@ -5,52 +5,52 @@ import scalatags.Text.all._
 import views.internal._
 import views.internal.tagsFunctions._
 
-private[views] object CreateTicket {
+private[views] object CreateProject {
 
   private[this] object ids {
-    val ticketNameInput = "ticket-name-input"
-    val ticketDescInput = "ticket-description-input"
+    val projectNameInput = "project-name-input"
+    val projectDescInput = "project-description-input"
   }
 
-  def createTicketPage(implicit request : RequestHeader) = scalatags.Text.all.html(
+  def createProjectPage(implicit request : RequestHeader) = scalatags.Text.all.html(
     head(
-      title := "Create new ticket",
+      title := "Create new project",
       styles(paths.styles.bootstrap.min),
     ),
     body(
       div(
         `class` := "container",
-        createTicketForm(request),
+        createProjectForm(request),
       ),
     )
   )
 
-  def createTicketForm(requestHeader: RequestHeader) = div(
+  def createProjectForm(requestHeader: RequestHeader) = div(
     `class` := "row",
     div(
       `class` := "col-md-8",
-      h4("Create ticket"),
+      h4("Create project"),
 
       form(
-        action := paths.api.createTicket,
+        action := paths.api.createProject,
         method := "post",
         csrfFormElement(requestHeader),
 
-        // ticket title
+        // project name
         div(
           `class` := "row",
           div(
             `class` := "col-md-6",
             label(
-              `for` := ids.ticketNameInput,
-              "Title: "
+              `for` := ids.projectNameInput,
+              "Name: "
             ),
             input(
-              id := ids.ticketNameInput,
-              name := formParamNames.createTicket.ticketTitle,
+              id := ids.projectNameInput,
+              name := formParamNames.createProject.projectName,
               `class` := "form-control",
               `type` := "text",
-              placeholder := "Some ticket name",
+              placeholder := "Some project name",
               required,
             )
           )
@@ -62,15 +62,15 @@ private[views] object CreateTicket {
           div(
             `class` := "col",
             label(
-              `for` := ids.ticketDescInput,
+              `for` := ids.projectDescInput,
               "Description: ",
             ),
             textarea(
-              id := ids.ticketDescInput,
-              name := formParamNames.createTicket.ticketDescription,
+              id := ids.projectDescInput,
+              name := formParamNames.createProject.projectDescription,
               `class` := "form-control",
               rows := "6",
-              placeholder := "Ticket description",
+              placeholder := "Project description",
               required,
             )
           )
@@ -87,7 +87,7 @@ private[views] object CreateTicket {
             button(
               `class` := "btn btn-primary btn-block",
               `type` := "submit",
-              "Create ticket"
+              "Create project"
             )
           ),
         ),

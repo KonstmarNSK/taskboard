@@ -24,14 +24,13 @@ class Application @Inject()(
 
   def index = Action {
       Ok(views.pages.homepageView(SharedMessages.itWorks))
-      Ok(Home.homepage(SharedMessages.itWorks))
-  }
-
-  def createTicket(title: String, description: String) = Action.async {
-    schema.createTicket(Ticket(title, description)).map(createdId => Ok(s"ID: $createdId"))
   }
 
   def getAllTickets = Action.async {
     schema.getAllTickets map (all => Ok(all.mkString("\n")))
+  }
+
+  def getAllProjects = Action.async {
+    schema.getAllProjects map (all => Ok(all.mkString("\n")))
   }
 }
