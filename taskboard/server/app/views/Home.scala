@@ -1,15 +1,14 @@
 package views
 
 import scalatags.Text.all._
+import views.internal._
+import views.internal.tagsFunctions._
 
-object Home {
+private[views] object Home {
   def homepage(message: String) = scalatags.Text.all.html(
     head(
       title := "Hello, Scala",
-      link(
-        rel := "stylesheet",
-        href := paths.styles.bootstrap.gridMin,
-      ),
+      styles(paths.styles.bootstrap.min),
     ),
     body(
       h2("Play and Scala.js share a same message"),
@@ -24,24 +23,6 @@ object Home {
         )
       ),
       script(src := paths.scripts.main),
-      tryingBootstrap
     )
-  )
-
-  private[this] val tryingBootstrap = div(
-    `class` := "container",
-    div(
-      `class` := "row",
-      div(
-        `class` := "col",
-        backgroundColor := "blue",
-        "123"
-      ),
-      div(
-        `class` := "col",
-        backgroundColor := "red",
-        "456"
-      ),
-    ),
   )
 }

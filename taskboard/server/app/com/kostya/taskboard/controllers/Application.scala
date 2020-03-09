@@ -8,7 +8,7 @@ import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.mvc._
 import slick.jdbc.JdbcProfile
 import views.Home
-import views.implicits._
+import views.implicits.scalatags._
 
 import scala.concurrent.ExecutionContext
 
@@ -23,6 +23,7 @@ class Application @Inject()(
   with HasDatabaseConfigProvider[JdbcProfile] {
 
   def index = Action {
+      Ok(views.pages.homepageView(SharedMessages.itWorks))
       Ok(Home.homepage(SharedMessages.itWorks))
   }
 
