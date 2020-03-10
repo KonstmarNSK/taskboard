@@ -47,5 +47,5 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(i
   def getAllTickets: Future[Seq[Ticket]] = db.run(tickets.result)
 
   def createProject(project: Project) = db.run(projects returning projects.map(_.id) += project)
-  def getAllProjects: Future[Seq[Project]] = db.run(projects.result)
+  def getAllProjects: Future[Seq[Project]] = db.run(projects.sortBy(_.name).result)
 }

@@ -23,8 +23,8 @@ class CreateTicket @Inject()(
     with HasDatabaseConfigProvider[JdbcProfile] {
 
   // get
-  def createTicketPage() = Action { implicit request =>
-    Ok(views.pages.createTicketView)
+  def createTicketPage() = Action.async { implicit request =>
+    schema.getAllProjects map (proj => Ok(views.pages.createTicketView(proj)))
   }
 
   // post

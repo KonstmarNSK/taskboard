@@ -20,12 +20,12 @@ private[views] object CreateProject {
     body(
       div(
         `class` := "container",
-        createProjectForm(request),
+        createProjectForm,
       ),
     )
   )
 
-  def createProjectForm(requestHeader: RequestHeader) = div(
+  def createProjectForm(implicit requestHeader: RequestHeader) = div(
     `class` := "row",
     div(
       `class` := "col-md-8",
@@ -34,7 +34,7 @@ private[views] object CreateProject {
       form(
         action := paths.api.createProject,
         method := "post",
-        csrfFormElement(requestHeader),
+        csrfFormElement,
 
         // project name
         div(
