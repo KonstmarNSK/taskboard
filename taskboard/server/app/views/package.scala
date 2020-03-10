@@ -1,6 +1,10 @@
+import com.kostya.taskboard.shared.Model.Project
+import database.Schema
 import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.mvc.{Codec, RequestHeader}
 import scalatags.Text.all._
+
+import scala.concurrent.ExecutionContext
 
 package object views {
 
@@ -23,7 +27,7 @@ package object views {
 
     def homepageView(s: String) : scalatags.Text.TypedTag[String] = Home.homepage(s)
 
-    def createTicketView(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage
+    def createTicketView(projects: Seq[Project])(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage(projects)
     def getAllTicketsView = ???
 
     def createProjectView(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateProject.createProjectPage
@@ -37,14 +41,24 @@ package object views {
       import play.api.data.Forms._
       import play.api.data._
 
+      // todo: add validation
       val createTicketForm = Form(
         mapping(
           createTicket.ticketTitle -> nonEmptyText,
           createTicket.ticketDescription -> nonEmptyText,
+          createTicket.priority -> nonEmptyText,
+          createTicket.projectId -> longNumber,
         )
-        // id isn't in form parameters
-        (Ticket.apply(_, _, 0L))
-        (Ticket.unapply(_).map({ case (title, desc, id) => (title, desc) }))
+        // id isn't in form parameters and new tickets are always opened
+        (Ticket.apply(_, _, _, ticketStates.opened, _, 0L))
+        (Ticket.unapply(_) map {
+           case ( name,
+                    desc,
+                    priority,
+                    state,
+                    projectId,
+                    id ) => (name, desc, priority, projectId) }
+        )
       )
 
       val createProjectForm = Form(
@@ -54,7 +68,7 @@ package object views {
         )
         // id isn't in form parameters
         (Project.apply(_, _, 0L))
-        (Project.unapply(_).map({ case (name, desc, id) => (name, desc) }))
+        (Project.unapply(_) map { case (name, desc, id) => (name, desc) })
       )
     }
 
@@ -91,7 +105,7 @@ package object views {
         href := path,
       )
 
-      def csrfFormElement(requestHeader: RequestHeader) =
+      def csrfFormElement(implicit requestHeader: RequestHeader) =
         input(
           `type` := "hidden",
           name := "csrfToken",
@@ -102,8 +116,10 @@ package object views {
 
     object formParamNames{
       object createTicket{
-        val ticketTitle = "ticketTitle"
-        val ticketDescription = "ticketDescription"
+        val ticketTitle = "title"
+        val ticketDescription = "description"
+        val projectId = "projectId"
+        val priority = "priority"
       }
 
       object createProject{
@@ -111,5 +127,6 @@ package object views {
         val projectDescription = "projectDescription"
       }
     }
+
   }
 }

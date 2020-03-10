@@ -1,18 +1,24 @@
 package views
 
+import com.kostya.taskboard.shared.Model.Project
+import database.Schema
 import play.api.mvc.RequestHeader
 import scalatags.Text.all._
 import views.internal._
 import views.internal.tagsFunctions._
+
+import scala.concurrent.ExecutionContext
 
 private[views] object CreateTicket {
 
   private[this] object ids {
     val ticketNameInput = "ticket-name-input"
     val ticketDescInput = "ticket-description-input"
+    val projectIdInput = "project-id-input"
+    val priorityInput = "ticket-priority-input"
   }
 
-  def createTicketPage(implicit request : RequestHeader) = scalatags.Text.all.html(
+  def createTicketPage(projects: Seq[Project])(implicit request: RequestHeader) = scalatags.Text.all.html(
     head(
       title := "Create new ticket",
       styles(paths.styles.bootstrap.min),
@@ -20,12 +26,12 @@ private[views] object CreateTicket {
     body(
       div(
         `class` := "container",
-        createTicketForm(request),
+        createTicketForm(projects),
       ),
     )
   )
 
-  def createTicketForm(requestHeader: RequestHeader) = div(
+  def createTicketForm(projects: Seq[Project])(implicit requestHeader: RequestHeader) = div(
     `class` := "row",
     div(
       `class` := "col-md-8",
@@ -34,7 +40,7 @@ private[views] object CreateTicket {
       form(
         action := paths.api.createTicket,
         method := "post",
-        csrfFormElement(requestHeader),
+        csrfFormElement,
 
         // ticket title
         div(
@@ -72,6 +78,62 @@ private[views] object CreateTicket {
               rows := "6",
               placeholder := "Ticket description",
               required,
+            )
+          )
+        ),
+
+        // priority
+        div(
+          `class` := "row",
+          div(
+            `class` := "col",
+            label(
+              `for` := ids.priorityInput,
+              "Priority: ",
+            ),
+            select(
+              id := ids.priorityInput,
+              name := formParamNames.createTicket.priority,
+              `class` := "form-control",
+              required,
+              option(
+                selected,
+                value := "LOW",
+                "Low"
+              ),
+              option(
+                value := "MEDIUM",
+                "Medium"
+              ),
+              option(
+                value := "HIGH",
+                "High"
+              ),
+            )
+          )
+        ),
+
+        // projectId
+        div(
+          `class` := "row",
+          div(
+            `class` := "col",
+            label(
+              `for` := ids.projectIdInput,
+              "Project: ",
+            ),
+            select(
+              id := ids.projectIdInput,
+              name := formParamNames.createTicket.projectId,
+              `class` := "form-control",
+              required,
+              // todo: replace with search by project name
+              for (
+                project <- projects
+              ) yield option(
+                value := project.id.toString,
+                project.projectName
+              ),
             )
           )
         ),
