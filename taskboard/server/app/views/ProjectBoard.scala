@@ -11,38 +11,58 @@ private[views] object ProjectBoard {
                        opened: Seq[Ticket],
                        inProcess: Seq[Ticket],
                        done: Seq[Ticket],
-                       willNotDo: Seq[Ticket])(implicit request : RequestHeader) = scalatags.Text.all.html(
-    head(
-      title := s"Project $projectName",
-      styles(paths.styles.bootstrap.min),
-    ),
-    body(
-      div(
-        `class` := "container",
+                       willNotDo: Seq[Ticket])(implicit request : RequestHeader) = {
+
+    val maxSize = Seq[Int](opened.size, inProcess.size, done.size, willNotDo.size).max
+
+    def drawRow(number : Int) = {
+
+      def drawTicket(ticket : Ticket) =
         div(
-          `class` := "row",
-          drawTickets("Opened", opened),
-          drawTickets("In process", inProcess),
-          drawTickets("Done", done),
-          drawTickets("Will not do", willNotDo),
+          `class` := "card",
+          div(
+            `class` := "card-body",
+            h5(ticket.ticketName),
+            p(ticket.ticketDescription),
+          ),
         )
+
+      div(
+        `class` := "row",
+
+        div(
+          `class` := "col",
+          if(opened.size > number) drawTicket(opened(number)) else ""
+        ),
+
+        div(
+          `class` := "col",
+          if(inProcess.size > number) drawTicket(inProcess(number)) else ""
+        ),
+
+        div(
+          `class` := "col",
+          if(done.size > number) drawTicket(done(number)) else ""
+        ),
+
+        div(
+          `class` := "col",
+          if(willNotDo.size > number) drawTicket(willNotDo(number)) else ""
+        ),
+      )
+    }
+
+    scalatags.Text.all.html(
+      head(
+        title := s"Project $projectName",
+        styles(paths.styles.bootstrap.min),
       ),
+      body(
+        div(
+          `class` := "container",
+          for(n <- 0 until maxSize) yield drawRow(n)
+        ),
+      )
     )
-  )
-
-  // draws column. For example, column with opened tickets
-  private[this] def drawTickets(title: String, tickets: Seq[Ticket]) = div(
-    `class` := "col-md-3",
-
-    h4(title),
-    for(
-      t <- tickets
-    ) yield ticket(t),
-  )
-
-  private[this] def ticket(ticket: Ticket) = div(
-    ticket.ticketName,
-    br,
-    ticket.ticketDescription
-  )
+  }
 }
