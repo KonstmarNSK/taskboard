@@ -22,8 +22,8 @@ class Application @Inject()(
                            ) extends AbstractController(cc)
   with HasDatabaseConfigProvider[JdbcProfile] {
 
-  def index = Action {
-      Ok(views.pages.homepageView(SharedMessages.itWorks))
+  def index = Action.async {
+      schema.getAllProjects map (all => Ok(views.pages.homepageView(SharedMessages.itWorks, all)))
   }
 
   def getAllTickets = Action.async {
@@ -32,5 +32,14 @@ class Application @Inject()(
 
   def getAllProjects = Action.async {
     schema.getAllProjects map (all => Ok(all.mkString("\n")))
+  }
+
+  def viewProjectBoard(projId: Long) = Action.async { implicit request =>
+    schema.getProjectsTickets(projId) map {
+      case (opened, inProcess, done, wontDo) => Ok(
+        views.pages.projectBoardPage("prName",
+          opened, inProcess, done, wontDo
+        ))
+    }
   }
 }

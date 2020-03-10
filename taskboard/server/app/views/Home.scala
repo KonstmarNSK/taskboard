@@ -1,11 +1,12 @@
 package views
 
+import com.kostya.taskboard.shared.Model.Project
 import scalatags.Text.all._
 import views.internal._
 import views.internal.tagsFunctions._
 
 private[views] object Home {
-  def homepage(message: String) = scalatags.Text.all.html(
+  def homepage(message: String, projects: Seq[Project]) = scalatags.Text.all.html(
     head(
       title := "Hello, Scala",
       styles(paths.styles.bootstrap.min),
@@ -23,6 +24,14 @@ private[views] object Home {
         )
       ),
       script(src := paths.scripts.main),
+
+      for(
+        project <- projects
+      ) yield {
+        div(
+          a(href := paths.api.viewProjectBoard(project.id), project.projectName)
+        )
+      }
     )
   )
 }
