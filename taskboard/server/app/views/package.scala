@@ -23,23 +23,13 @@ package object views {
   object pages{
 
     def homepageView(s: String, projects: Seq[Project]) : scalatags.Text.TypedTag[String] = Home.homepage(s, projects)
-    def projectBoardPage(projectName: String,
-                         opened: Seq[Ticket],
-                         inProcess: Seq[Ticket],
-                         done: Seq[Ticket],
-                         willNotDo: Seq[Ticket])(implicit request : RequestHeader) =
+    def projectBoardPage(projectName: String, tickets: Seq[Ticket]*)(implicit request : RequestHeader) =
+      ProjectBoard.projectBoardPage(projectName, tickets: _*)
 
-      ProjectBoard.projectBoardPage(projectName: String,
-            opened: Seq[Ticket],
-            inProcess: Seq[Ticket],
-            done: Seq[Ticket],
-            willNotDo: Seq[Ticket])
-
-    def createTicketView(projects: Seq[Project])(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage(projects)
-    def getAllTicketsView = ???
+    def createTicketView(projects: Seq[Project])
+                        (implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage(projects)
 
     def createProjectView(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateProject.createProjectPage
-    def getAllProjectsView = ???
 
   }
 

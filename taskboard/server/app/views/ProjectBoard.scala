@@ -7,13 +7,9 @@ import views.internal._
 import views.internal.tagsFunctions._
 
 private[views] object ProjectBoard {
-  def projectBoardPage(projectName: String,
-                       opened: Seq[Ticket],
-                       inProcess: Seq[Ticket],
-                       done: Seq[Ticket],
-                       willNotDo: Seq[Ticket])(implicit request : RequestHeader) = {
+  def projectBoardPage(projectName: String, tickets: Seq[Ticket]*)(implicit request : RequestHeader) = {
 
-    val maxSize = Seq[Int](opened.size, inProcess.size, done.size, willNotDo.size).max
+    val maxSize = tickets.map(_.size).max
 
     def drawRow(number : Int) = {
 
@@ -27,28 +23,18 @@ private[views] object ProjectBoard {
           ),
         )
 
+      // one ticket from each seq. 1 seq - 1 column
       div(
         `class` := "row",
 
-        div(
-          `class` := "col",
-          if(opened.size > number) drawTicket(opened(number)) else ""
-        ),
-
-        div(
-          `class` := "col",
-          if(inProcess.size > number) drawTicket(inProcess(number)) else ""
-        ),
-
-        div(
-          `class` := "col",
-          if(done.size > number) drawTicket(done(number)) else ""
-        ),
-
-        div(
-          `class` := "col",
-          if(willNotDo.size > number) drawTicket(willNotDo(number)) else ""
-        ),
+          for(
+            ticketSeq <- tickets
+          ) yield {
+            div(
+              `class` := "col",
+              if(ticketSeq.size > number) drawTicket(ticketSeq(number)) else ""
+            )
+          }
       )
     }
 
