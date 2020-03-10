@@ -15,6 +15,8 @@ GET        /api-rest/create-project       com.kostya.taskboard.controllers.Creat
 POST       /api-rest/create-project       com.kostya.taskboard.controllers.CreateProject.createProject
 # get created projects
 GET        /api-rest/get-projects         com.kostya.taskboard.controllers.Application.getAllProjects
+# get project board
+GET        /api-rest/view-project-board    com.kostya.taskboard.controllers.Application.viewProjectBoard(projId : Long)
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)

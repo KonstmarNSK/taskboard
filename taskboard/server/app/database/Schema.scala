@@ -1,8 +1,8 @@
 package database
 
-import javax.inject.{Inject, Singleton}
+import com.kostya.taskboard.shared.Model
 import com.kostya.taskboard.shared.Model.{Project, Ticket}
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 
@@ -15,6 +15,7 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(i
 
 
   class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECTS") {
+
     import O._
 
     def id = column[Long]("ID", PrimaryKey, AutoInc)
@@ -24,9 +25,10 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(i
     def * = (name, description, id).mapTo[Project]
   }
 
-  lazy val projects = TableQuery[ProjectsTable]
+  private[this] lazy val projects = TableQuery[ProjectsTable]
 
   class TicketsTable(tag: Tag) extends Table[Ticket](tag, "TICKETS") {
+
     import O._
 
     def id = column[Long]("ID", PrimaryKey, AutoInc)
@@ -34,18 +36,35 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(i
     def description = column[String]("DESCRIPTION")
     def state = column[String]("STATE")
     def priority = column[String]("PRIORITY")
+    def projectId = column[Long]("PROJECT")
 
-    def projectId= column[Long] ("PROJECT")
     def projectIdFk = foreignKey("FK_PROJECT_ID", projectId, projects)(_.id)
 
     def * = (title, description, priority, state, projectId, id).mapTo[Ticket]
   }
 
-  lazy val tickets = TableQuery[TicketsTable]
+  private[this] lazy val tickets = TableQuery[TicketsTable]
 
   def createTicket(ticket: Ticket) = db.run(tickets returning tickets.map(_.id) += ticket)
+
   def getAllTickets: Future[Seq[Ticket]] = db.run(tickets.result)
 
   def createProject(project: Project) = db.run(projects returning projects.map(_.id) += project)
+
   def getAllProjects: Future[Seq[Project]] = db.run(projects.sortBy(_.name).result)
+
+  def getProjectsTickets(projId: Long) = {
+
+    val opened = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.opened))
+    val inProcess = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.inProcess))
+    val done = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.done))
+    val willNotDo = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.willNotDo))
+
+    for {
+      oResult <- db.run(opened.result)
+      iResult <- db.run(inProcess.result)
+      dResult <- db.run(done.result)
+      wResult <- db.run(willNotDo.result)
+    } yield (oResult, iResult, dResult, wResult)
+  }
 }

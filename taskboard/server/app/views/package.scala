@@ -1,10 +1,7 @@
-import com.kostya.taskboard.shared.Model.Project
-import database.Schema
+import com.kostya.taskboard.shared.Model.{Project, Ticket}
 import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.mvc.{Codec, RequestHeader}
 import scalatags.Text.all._
-
-import scala.concurrent.ExecutionContext
 
 package object views {
 
@@ -25,7 +22,18 @@ package object views {
   // views
   object pages{
 
-    def homepageView(s: String) : scalatags.Text.TypedTag[String] = Home.homepage(s)
+    def homepageView(s: String, projects: Seq[Project]) : scalatags.Text.TypedTag[String] = Home.homepage(s, projects)
+    def projectBoardPage(projectName: String,
+                         opened: Seq[Ticket],
+                         inProcess: Seq[Ticket],
+                         done: Seq[Ticket],
+                         willNotDo: Seq[Ticket])(implicit request : RequestHeader) =
+
+      ProjectBoard.projectBoardPage(projectName: String,
+            opened: Seq[Ticket],
+            inProcess: Seq[Ticket],
+            done: Seq[Ticket],
+            willNotDo: Seq[Ticket])
 
     def createTicketView(projects: Seq[Project])(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage(projects)
     def getAllTicketsView = ???
@@ -95,6 +103,7 @@ package object views {
       object api{
         val createTicket = "/api-rest/create-ticket"
         val createProject = "/api-rest/create-project"
+        def viewProjectBoard(projId: Long) = s"/api-rest/view-project-board?projId=$projId"
       }
     }
 
