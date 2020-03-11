@@ -3,6 +3,10 @@ import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.mvc.{Codec, RequestHeader}
 import scalatags.Text.all._
 
+/**
+ *  Package object contains mappings from scalatags' tags to play's Writable,
+ *  functions that return pages, forms and things that are private to this package
+ */
 package object views {
 
   object implicits {
@@ -19,27 +23,16 @@ package object views {
     }
   }
 
-  // views
   object pages{
 
     def homepageView(s: String, projects: Seq[Project]) : scalatags.Text.TypedTag[String] = Home.homepage(s, projects)
-    def projectBoardPage(projectName: String,
-                         opened: Seq[Ticket],
-                         inProcess: Seq[Ticket],
-                         done: Seq[Ticket],
-                         willNotDo: Seq[Ticket])(implicit request : RequestHeader) =
+    def projectBoardPage(projectName: String, tickets: Seq[Ticket])(implicit request : RequestHeader) =
+      ProjectBoard.projectBoardPage(projectName, tickets)
 
-      ProjectBoard.projectBoardPage(projectName: String,
-            opened: Seq[Ticket],
-            inProcess: Seq[Ticket],
-            done: Seq[Ticket],
-            willNotDo: Seq[Ticket])
-
-    def createTicketView(projects: Seq[Project])(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage(projects)
-    def getAllTicketsView = ???
+    def createTicketView(projects: Seq[Project])
+                        (implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateTicket.createTicketPage(projects)
 
     def createProjectView(implicit req : RequestHeader) : scalatags.Text.TypedTag[String] = CreateProject.createProjectPage
-    def getAllProjectsView = ???
 
   }
 

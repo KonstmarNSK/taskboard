@@ -54,17 +54,6 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)(i
   def getAllProjects: Future[Seq[Project]] = db.run(projects.sortBy(_.name).result)
 
   def getProjectsTickets(projId: Long) = {
-
-    val opened = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.opened))
-    val inProcess = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.inProcess))
-    val done = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.done))
-    val willNotDo = tickets.filter( t => (t.projectId === projId) && (t.state === Model.ticketStates.willNotDo))
-
-    for {
-      oResult <- db.run(opened.result)
-      iResult <- db.run(inProcess.result)
-      dResult <- db.run(done.result)
-      wResult <- db.run(willNotDo.result)
-    } yield (oResult, iResult, dResult, wResult)
+    db.run(tickets.filter(_.projectId === projId).result)
   }
 }
