@@ -7,15 +7,34 @@ import views.internal._
 import views.internal.tagsFunctions._
 
 private[views] object ProjectBoard {
-  def projectBoardPage(projectName: String, tickets: Seq[Ticket])(implicit request: RequestHeader) = {
+
+  /**
+   * Draws project board page with project's tickets grouped in columns by status
+   *
+   * @param projectName - name of the project
+   * @param tickets - list of tickets to draw
+   * @return scalatags' Tag, representing the page
+   */
+  def projectBoardPage(projectName: String, tickets: Seq[Ticket]) = {
 
     case class Column(name: String, tickets: Seq[Ticket])
 
     val ticketsByStatus = tickets.groupBy(_.state).map { case (status, tickets) => Column(status, tickets) }
     val rowsCount = ticketsByStatus.map(_.tickets.size).max
 
+    /**
+     * Draws a row of tickets (one ticket in column)
+     *
+     * @param number - number of ticket
+     * @return sclatags' Tag (div), representing row
+     */
     def drawRow(number: Int) = {
 
+      /**
+       * Draws a ticket
+       * @param ticket - ticket to draw
+       * @return scalatags' Tag (div), representing ticket
+       */
       def drawTicket(ticket: Ticket) =
         div(
           `class` := "card",
@@ -26,7 +45,7 @@ private[views] object ProjectBoard {
           ),
         )
 
-      // one ticket from each seq. 1 seq - 1 column
+      // one ticket from each seq. 1 state - 1 seq - 1 column
       div(
         `class` := "row",
 

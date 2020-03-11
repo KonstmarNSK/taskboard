@@ -3,6 +3,10 @@ import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.mvc.{Codec, RequestHeader}
 import scalatags.Text.all._
 
+/**
+ *  Package object contains mappings from scalatags' tags to play's Writable,
+ *  functions that return pages, forms and things that are private to this package
+ */
 package object views {
 
   object implicits {
@@ -19,7 +23,6 @@ package object views {
     }
   }
 
-  // views
   object pages{
 
     def homepageView(s: String, projects: Seq[Project]) : scalatags.Text.TypedTag[String] = Home.homepage(s, projects)
