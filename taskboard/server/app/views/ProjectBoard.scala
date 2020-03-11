@@ -1,19 +1,22 @@
 package views
 
-import com.kostya.taskboard.shared.Model.{Project, Ticket}
+import com.kostya.taskboard.shared.Model.Ticket
 import play.api.mvc.RequestHeader
 import scalatags.Text.all._
 import views.internal._
 import views.internal.tagsFunctions._
 
 private[views] object ProjectBoard {
-  def projectBoardPage(projectName: String, tickets: Seq[Ticket]*)(implicit request : RequestHeader) = {
+  def projectBoardPage(projectName: String, tickets: Seq[Ticket])(implicit request: RequestHeader) = {
 
-    val maxSize = tickets.map(_.size).max
+    case class Column(name: String, tickets: Seq[Ticket])
 
-    def drawRow(number : Int) = {
+    val ticketsByStatus = tickets.groupBy(_.state).map { case (status, tickets) => Column(status, tickets) }
+    val rowsCount = ticketsByStatus.map(_.tickets.size).max
 
-      def drawTicket(ticket : Ticket) =
+    def drawRow(number: Int) = {
+
+      def drawTicket(ticket: Ticket) =
         div(
           `class` := "card",
           div(
@@ -27,14 +30,14 @@ private[views] object ProjectBoard {
       div(
         `class` := "row",
 
-          for(
-            ticketSeq <- tickets
-          ) yield {
-            div(
-              `class` := "col",
-              if(ticketSeq.size > number) drawTicket(ticketSeq(number)) else ""
-            )
-          }
+        for (
+          ticketSeq <- ticketsByStatus.map(_.tickets).toSeq
+        ) yield {
+          div(
+            `class` := "col",
+            if (ticketSeq.size > number) drawTicket(ticketSeq(number)) else ""
+          )
+        }
       )
     }
 
@@ -46,7 +49,21 @@ private[views] object ProjectBoard {
       body(
         div(
           `class` := "container",
-          for(n <- 0 until maxSize) yield drawRow(n)
+
+          // column titles
+          div(
+            `class` := "row",
+            for (
+              status: String <- ticketsByStatus.map(_.name).toSeq
+            ) yield
+              div(
+                `class` := "col",
+                h5(status),
+              ),
+          ),
+
+          // tickets
+          for (n <- 0 until rowsCount) yield drawRow(n)
         ),
       )
     )

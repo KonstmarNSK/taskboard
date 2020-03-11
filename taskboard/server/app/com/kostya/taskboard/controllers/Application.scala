@@ -35,11 +35,8 @@ class Application @Inject()(
   }
 
   def viewProjectBoard(projId: Long) = Action.async { implicit request =>
-    schema.getProjectsTickets(projId) map {
-      case (opened, inProcess, done, wontDo) => Ok(
-        views.pages.projectBoardPage("prName",
-          opened, inProcess, done, wontDo
-        ))
+    schema.getProjectsTickets(projId) map { allTickets =>
+      Ok(views.pages.projectBoardPage("Proj name", allTickets))
     }
   }
 }
