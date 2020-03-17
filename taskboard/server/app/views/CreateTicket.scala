@@ -21,7 +21,7 @@ private[views] object CreateTicket {
   def createTicketPage(projects: Seq[Project])(implicit request: RequestHeader) = scalatags.Text.all.html(
     head(
       title := "Create new ticket",
-      styles(paths.styles.bootstrap.min),
+      styles(links.styles.bootstrap.min),
     ),
     body(
       div(
@@ -38,7 +38,7 @@ private[views] object CreateTicket {
       h4("Create ticket"),
 
       form(
-        action := paths.api.createTicket,
+        action := links.api.createTicket,
         method := "post",
         csrfFormElement,
 

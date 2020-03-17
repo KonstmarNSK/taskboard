@@ -63,7 +63,7 @@ private[views] object ProjectBoard {
     scalatags.Text.all.html(
       head(
         title := s"Project $projectName",
-        styles(paths.styles.bootstrap.min),
+        styles(links.styles.bootstrap.min),
       ),
       body(
         div(
