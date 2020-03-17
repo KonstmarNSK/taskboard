@@ -23,10 +23,11 @@ package object views {
     }
   }
 
+  // views that can be returned from controllers
   object pages{
 
     def homepageView(s: String, projects: Seq[Project]) : scalatags.Text.TypedTag[String] = Home.homepage(s, projects)
-    def projectBoardPage(projectName: String, tickets: Seq[Ticket])(implicit request : RequestHeader) =
+    def projectBoardView(projectName: String, tickets: Seq[Ticket]) =
       ProjectBoard.projectBoardPage(projectName, tickets)
 
     def createTicketView(projects: Seq[Project])

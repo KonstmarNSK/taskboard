@@ -36,7 +36,7 @@ class Application @Inject()(
 
   def viewProjectBoard(projId: Long) = Action.async { implicit request =>
     schema.getProjectsTickets(projId) map { allTickets =>
-      Ok(views.pages.projectBoardPage("Proj name", allTickets))
+      Ok(views.pages.projectBoardView("Proj name", allTickets))
     }
   }
 }
