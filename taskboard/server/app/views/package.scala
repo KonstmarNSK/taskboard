@@ -76,7 +76,7 @@ package object views {
   // things that are specific for classes in this package
   private[views] object internal {
 
-    object paths {
+    object links {
 
       object scripts {
         val main = "/assets/client-fastopt.js"
@@ -90,15 +90,16 @@ package object views {
           val grid = "/assets/stylesheets/bootstrap/bootstrap-grid.css"
           val gridMin = "/assets/stylesheets/bootstrap/bootstrap-grid.min.css"
         }
-
       }
 
       object api{
         val createTicket = "/api-rest/create-ticket"
         val createProject = "/api-rest/create-project"
-        def viewProjectBoard(projId: Long) = s"/api-rest/view-project-board?projId=$projId"
       }
+
+      def projectBoard(projId: Long) = s"/views/view-project-board?projId=$projId"
     }
+
 
     object tagsFunctions {
 

@@ -9,7 +9,7 @@ private[views] object Home {
   def homepage(message: String, projects: Seq[Project]) = scalatags.Text.all.html(
     head(
       title := "Hello, Scala",
-      styles(paths.styles.bootstrap.min),
+      styles(links.styles.bootstrap.min),
     ),
     body(
       h2("Play and Scala.js share a same message"),
@@ -23,13 +23,13 @@ private[views] object Home {
           em(id := "scalajsShoutOut"),
         )
       ),
-      script(src := paths.scripts.main),
+      script(src := links.scripts.main),
 
       for(
         project <- projects
       ) yield {
         div(
-          a(href := paths.api.viewProjectBoard(project.id), project.projectName)
+          a(href := links.projectBoard(project.id), project.projectName)
         )
       }
     )

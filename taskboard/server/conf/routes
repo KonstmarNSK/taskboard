@@ -5,18 +5,19 @@
 # Home page
 GET        /                             com.kostya.taskboard.controllers.Application.index
 # tickets creation
-GET        /api-rest/create-ticket       com.kostya.taskboard.controllers.CreateTicket.createTicketPage
+GET        /views/create-ticket          com.kostya.taskboard.controllers.CreateTicket.createTicketPage
 POST       /api-rest/create-ticket       com.kostya.taskboard.controllers.CreateTicket.createTicket
 # get created tickets
-GET        /api-rest/get-tickets         com.kostya.taskboard.controllers.Application.getAllTickets
+GET        /views/get-tickets            com.kostya.taskboard.controllers.Application.getAllTickets
 
 # projects creation
-GET        /api-rest/create-project       com.kostya.taskboard.controllers.CreateProject.createProjectPage
+GET        /views/create-project          com.kostya.taskboard.controllers.CreateProject.createProjectPage
 POST       /api-rest/create-project       com.kostya.taskboard.controllers.CreateProject.createProject
 # get created projects
-GET        /api-rest/get-projects         com.kostya.taskboard.controllers.Application.getAllProjects
+GET        /views/get-projects            com.kostya.taskboard.controllers.Application.getAllProjects
+
 # get project board
-GET        /api-rest/view-project-board    com.kostya.taskboard.controllers.Application.viewProjectBoard(projId : Long)
+GET        /views/view-project-board      com.kostya.taskboard.controllers.Application.viewProjectBoard(projId : Long)
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)

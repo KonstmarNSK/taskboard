@@ -15,7 +15,7 @@ private[views] object CreateProject {
   def createProjectPage(implicit request : RequestHeader) = scalatags.Text.all.html(
     head(
       title := "Create new project",
-      styles(paths.styles.bootstrap.min),
+      styles(links.styles.bootstrap.min),
     ),
     body(
       div(
@@ -32,7 +32,7 @@ private[views] object CreateProject {
       h4("Create project"),
 
       form(
-        action := paths.api.createProject,
+        action := links.api.createProject,
         method := "post",
         csrfFormElement,
 
