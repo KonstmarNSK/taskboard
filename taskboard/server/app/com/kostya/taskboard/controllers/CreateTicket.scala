@@ -1,6 +1,6 @@
 package com.kostya.taskboard.controllers
 
-import com.kostya.taskboard.shared.Model.Ticket
+import com.kostya.taskboard.shared.Model.{Ticket, TicketState}
 import database.Schema
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
@@ -29,7 +29,8 @@ class CreateTicket @Inject()(
 
   // post
   def createTicket() = Action.async { implicit request =>
-    val ticket = views.forms.createTicketForm.bindFromRequest.get
-    schema.createTicket(ticket).map(createdId => Ok(s"ID: $createdId"))
+        val ticket = views.forms.createTicketForm.bindFromRequest.get;
+
+        schema.createTicket(ticket) map (createdId => Ok(s"ID: $createdId"))
   }
 }

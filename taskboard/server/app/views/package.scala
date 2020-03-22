@@ -1,7 +1,10 @@
 import com.kostya.taskboard.shared.Model.{Project, Ticket}
+import database.Schema
 import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.mvc.{Codec, RequestHeader}
 import scalatags.Text.all._
+
+import scala.concurrent.ExecutionContext
 
 /**
  *  Package object contains mappings from scalatags' tags to play's Writable,
@@ -44,32 +47,39 @@ package object views {
 
       // todo: add validation
       val createTicketForm = Form(
-        mapping(
-          createTicket.ticketTitle -> nonEmptyText,
-          createTicket.ticketDescription -> nonEmptyText,
-          createTicket.priority -> nonEmptyText,
-          createTicket.projectId -> longNumber,
-        )
-        // id isn't in form parameters and new tickets are always opened
-        (Ticket.apply(_, _, _, ticketStates.opened, _, 0L))
-        (Ticket.unapply(_) map {
-           case ( name,
-                    desc,
-                    priority,
-                    state,
-                    projectId,
-                    id ) => (name, desc, priority, projectId) }
-        )
-      )
+          mapping(
+            createTicket.ticketTitle -> nonEmptyText,
+            createTicket.ticketDescription -> nonEmptyText,
+            createTicket.priority -> nonEmptyText,
+            createTicket.projectId -> longNumber,
+          )
+          // id isn't in form parameters and new tickets are always opened
+          (
+            (title, desc, priority, projectId) =>
+              Ticket.apply(
+                  title, desc, TicketPriority(priority), TicketState("STUB_TICKET_NOT_STORED"), projectId, 0L
+              )
 
-      val createProjectForm = Form(
+          )
+
+          (Ticket.unapply(_) map {
+             case ( name,
+                      desc,
+                      priority,
+                      state,
+                      projectId,
+                      id ) => (name, desc, priority.value, projectId) }
+          )
+        )
+
+    val createProjectForm = Form(
         mapping(
           createProject.projectName -> nonEmptyText,
           createProject.projectDescription -> nonEmptyText,
         )
         // id isn't in form parameters
-        (Project.apply(_, _, 0L))
-        (Project.unapply(_) map { case (name, desc, id) => (name, desc) })
+        (Project.apply(_, _, 1L, 0L))
+        (Project.unapply(_) map { case (name, desc, wfId, id) => (name, desc) })
       )
     }
 

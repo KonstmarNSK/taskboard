@@ -19,7 +19,7 @@ private[views] object ProjectBoard {
 
     case class Column(name: String, tickets: Seq[Ticket])
 
-    val ticketsByStatus = tickets.groupBy(_.state).map { case (status, tickets) => Column(status, tickets) }
+    val ticketsByStatus = tickets.groupBy(_.state).map { case (status, tickets) => Column(status.value, tickets) }
     val rowsCount = ticketsByStatus.map(_.tickets.size).max
 
     /**

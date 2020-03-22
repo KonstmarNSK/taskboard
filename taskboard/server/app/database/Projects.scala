@@ -8,7 +8,7 @@ private[database] class Projects(protected val dbConfigProvider: DatabaseConfigP
   import profile.api._
 
 
-  private class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECTS") {
+  class ProjectsTable(tag: Tag) extends Table[Project](tag, "PROJECTS") {
 
     import O._
 

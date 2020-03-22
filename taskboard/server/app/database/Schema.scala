@@ -19,7 +19,11 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   private[this] lazy val projects = Projects(dbConfigProvider).table
   private[this] lazy val workflowTables = Workflows(dbConfigProvider).tables
 
-  def createTicket(ticket: Ticket) = db.run(tickets returning tickets.map(_.id) += ticket)
+  def createTicket(ticket: Ticket) = {
+    getInitialState(ticket.projectId) flatMap { case (_, initState, _) =>
+      db.run(tickets returning tickets.map(_.id) += ticket.copy(state = TicketState(initState)))
+    }
+  }
 
   def getAllTickets: Future[Seq[Ticket]] = db.run(tickets.result)
 
@@ -27,11 +31,15 @@ class Schema @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
 
   def getAllProjects: Future[Seq[Project]] = db.run(projects.sortBy(_.name).result)
 
-  def getProjectsTickets(projId: Long) = {
-    db.run(tickets.filter(_.projectId === projId).result)
-  }
+  def getProjectsTickets(projId: Long) = db.run(tickets.filter(_.projectId === projId).result)
 
-  def getProjectWorkflow(projId: Long) = {
+  def getInitialState(projId: Long) = {
+    val workflow = for{
+      workflowId <- projects.filter(_.id === projId).map(_.workflowId);
+      initStateId <- workflowTables.workflows.filter(_.id === workflowId).map(_.initialStateId);
+      initialState <- workflowTables.possibleStates.filter(_.id === initStateId)
+    } yield initialState
 
+    db.run(workflow.result.head)
   }
 }
